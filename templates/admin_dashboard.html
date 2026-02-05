@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h2>Admin Dashboard</h2>
+    <div class="actions">
+        <!-- Quick Actions if needed -->
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="stat-card">
+        <h3>Total Students</h3>
+        <div class="value">{{ student_count }}</div>
+        <a href="{{ url_for('manage_students') }}" class="btn-secondary mt-2">Manage Students</a>
+    </div>
+    <div class="stat-card">
+        <h3>Class Logins</h3>
+        <div class="value">{{ class_login_count }}</div>
+        <a href="{{ url_for('manage_class_logins') }}" class="btn-secondary mt-2">Manage Class Logins</a>
+    </div>
+    <div class="stat-card">
+        <h3>Departments</h3>
+        <div class="value">{{ dept_count }}</div>
+        <a href="{{ url_for('manage_departments') }}" class="btn-secondary mt-2">Manage Depts</a>
+    </div>
+    <div class="stat-card">
+        <h3>Attendance</h3>
+        <div class="value">System</div>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+            <a href="{{ url_for('admin_attendance_overview') }}" class="btn-secondary">Dept-wise Overview</a>
+            <a href="{{ url_for('admin_attendance_correction') }}" class="btn-secondary">Daily Correction</a>
+            <a href="{{ url_for('admin_student_percentage') }}" class="btn-secondary">Percentage Override</a>
+            <a href="{{ url_for('admin_reset_attendance') }}" class="btn-secondary"
+                style="background-color: #ef4444; border-color: #ef4444; color: white;">Reset Attendance</a>
+        </div>
+    </div>
+    <div class="stat-card">
+        <h3>Subjects</h3>
+        <div class="value">-</div>
+        <a href="{{ url_for('manage_subjects') }}" class="btn-secondary mt-2">Manage Subjects</a>
+    </div>
+</div>
+
+<h3>Management Modules</h3>
+<div class="dashboard-grid">
+    <a href="{{ url_for('manage_departments') }}" class="module-card">
+        <h4>Departments</h4>
+        <p>Add or remove departments</p>
+    </a>
+
+    <a href="{{ url_for('manage_staff') }}" class="module-card">
+        <h4>Staff</h4>
+        <p>Add / Edit / Delete staff members</p>
+    </a>
+
+    <a href="{{ url_for('manage_students') }}" class="module-card">
+        <h4>Students</h4>
+        <p>Manage Student records</p>
+    </a>
+    <a href="{{ url_for('manage_subjects') }}" class="module-card">
+        <h4>Subjects</h4>
+        <p>Assign subjects to staff</p>
+    </a>
+    <a href="{{ url_for('manage_class_logins') }}" class="module-card">
+        <h4>Class Logins</h4>
+        <p>Manage Class Credentials</p>
+    </a>
+    <a href="{{ url_for('admin_attendance_correction') }}" class="module-card" style="border-left: 4px solid #f59e0b;">
+        <h4>Attendance Correction</h4>
+        <p>Override/Edit student attendance</p>
+    </a>
+</div>
+
+<style>
+    .module-card {
+        display: block;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        color: var(--text-color);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border-color);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .module-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border-color: var(--primary-color);
+    }
+
+    .module-card h4 {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .module-card p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}

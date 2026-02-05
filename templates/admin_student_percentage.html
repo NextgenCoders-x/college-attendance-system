@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h2>Student Attendance Percentage Management</h2>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn-secondary">Back to Dashboard</a>
+</div>
+
+<!-- Filter Section -->
+<div class="card-section mb-4">
+    <form method="GET" action="{{ url_for('admin_student_percentage') }}" class="filter-form">
+        <div class="form-group">
+            <label>Department</label>
+            <select name="department_id" required>
+                <option value="">-- Select Department --</option>
+                {% for dept in departments %}
+                <option value="{{ dept.id }}" {% if selected_dept|int==dept.id %}selected{% endif %}>
+                    {{ dept.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Year</label>
+            <select name="year" required>
+                <option value="">-- Select Year --</option>
+                <option value="1" {% if selected_year=='1' %}selected{% endif %}>1st Year</option>
+                <option value="2" {% if selected_year=='2' %}selected{% endif %}>2nd Year</option>
+                <option value="3" {% if selected_year=='3' %}selected{% endif %}>3rd Year</option>
+                <option value="4" {% if selected_year=='4' %}selected{% endif %}>4th Year</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-primary" style="align-self: flex-end; margin-bottom: 1.5rem;">Load
+            Students</button>
+    </form>
+</div>
+
+{% if students %}
+<div class="card-section">
+    <form method="POST" action="{{ url_for('admin_student_percentage_update') }}">
+        <input type="hidden" name="department_id" value="{{ selected_dept }}">
+        <input type="hidden" name="year" value="{{ selected_year }}">
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reg No</th>
+                        <th>Name</th>
+                        <th>Calculated %</th>
+                        <th style="width: 200px;">Override % (0-100)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.register_no }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>
+                            <span
+                                class="badge {% if student.calculated < 75 %}badge-danger{% else %}badge-success{% endif %}">
+                                {{ student.calculated }}%
+                            </span>
+                        </td>
+                        <td>
+                            <input type="number" step="0.1" min="0" max="100" name="override_{{ student.id }}"
+                                value="{{ student.override if student.override is not none else '' }}"
+                                placeholder="Auto" style="width: 100px; padding: 0.25rem;">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="actions mt-3">
+            <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+    </form>
+</div>
+{% endif %}
+
+<style>
+    .filter-form {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-form .form-group {
+        min-width: 200px;
+        flex: 1;
+        margin-bottom: 0;
+    }
+
+    .badge {
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .badge-success {
+        color: #065f46;
+        background: #d1fae5;
+    }
+
+    .badge-danger {
+        color: #991b1b;
+        background: #fee2e2;
+    }
+
+    .mb-4 {
+        margin-bottom: 2rem;
+    }
+
+    .mt-3 {
+        margin-top: 1.5rem;
+    }
+</style>
+{% endblock %}

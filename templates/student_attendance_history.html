@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="dash-container">
+    <!-- Header -->
+    <div class="header-section">
+        <h2>Attendance History</h2>
+        <a href="{{ url_for('student_dashboard') }}" class="btn-primary"
+            style="max-width: fit-content; padding: 0.75rem 1.5rem;">&larr; Back to Dashboard</a>
+    </div>
+
+    <!-- History Table -->
+    <div class="card-section">
+        <div class="responsive-table-wrap">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th style="width: 120px;">Date</th>
+                        <th>Subject</th>
+                        <th style="width: 100px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rec in history %}
+                    <tr class="status-row {{ rec.status|lower|replace(' ', '-') }}">
+                        <td class="date-col">{{ rec.date }}</td>
+                        <td>
+                            <div class="subj-name">{{ rec.subject_name }}</div>
+                            <div class="subj-code">{{ rec.subject_code }}</div>
+                        </td>
+                        <td>
+                            <span class="badge {{ rec.status|lower|replace(' ', '-') }}">
+                                {{ rec.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="empty-msg">No attendance records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Reuse consistent styles */
+    .dash-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 0.5rem;
+    }
+
+    .header-section {
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .responsive-table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: white;
+    }
+
+    .history-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 500px;
+    }
+
+    .history-table th,
+    .history-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .history-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .subj-name {
+        font-weight: 500;
+    }
+
+    .subj-code {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 99px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+
+    .badge.present {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge.absent {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+
+    .badge.on-duty {
+        background-color: #dbeafe;
+        color: #1e40af;
+    }
+
+    @media (max-width: 768px) {
+        .header-section {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            text-align: center;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 0.75rem;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}

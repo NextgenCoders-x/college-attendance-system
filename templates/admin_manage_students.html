@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h2>Manage Students</h2>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn-secondary">Back to Dashboard</a>
+</div>
+
+<div class="content-split">
+    <div class="form-card">
+        <h3>Add Student</h3>
+        <form method="POST">
+            <div class="form-group">
+                <label>Register No.</label>
+                <input type="text" name="register_no" required>
+            </div>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>Department</label>
+                <select name="department" required>
+                    <option value="">Select Department</option>
+                    {% for dept in departments %}
+                    <option value="{{ dept.id }}">{{ dept.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Year</label>
+                <select name="year" required>
+                    <option value="1">1st Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3">3rd Year</option>
+                    <option value="4">4th Year</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Batch</label>
+                <select name="section" required>
+                    <option value="I Batch">I Batch</option>
+                    <option value="II Batch">II Batch</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-primary">Add Student</button>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Reg No</th>
+                    <th>Name</th>
+                    <th>Dept</th>
+                    <th>Batch</th>
+                    <th style="width: 120px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.register_no }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.dept_name or 'N/A' }}</td>
+                    <td>{{ student.current_year }} - {{ student.section }}</td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem; justify-content: flex-start;">
+                            <a href="{{ url_for('edit_student', student_id=student.id) }}" class="icon-btn edit-btn"
+                                title="Edit">
+                                ✏️
+                            </a>
+                            <form method="POST" action="{{ url_for('delete_student', student_id=student.id) }}"
+                                onsubmit="return confirm('Are you sure? This deletes the student and login access.');"
+                                style="display:inline;">
+                                <button type="submit" class="icon-btn delete-btn" title="Delete">🗑️</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">No students found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

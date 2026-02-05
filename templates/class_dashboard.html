@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h2>Class Dashboard</h2>
+    <p class="subtitle">{{ dept_name }} - Year {{ year }} - {{ batch }}</p>
+</div>
+
+<div class="card-section">
+    <h3>Class Subjects</h3>
+    <div class="subject-grid">
+        {% for subject in subjects %}
+        <div class="subject-card">
+            <h4>{{ subject.name }} ({{ subject.code }})</h4>
+            <p><strong>Department:</strong> {{ subject.dept_name }}</p>
+            <p><strong>Staff:</strong> {{ subject.staff_name if subject.staff_name else 'Not Assigned' }}</p>
+            <div class="action-buttons"
+                style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem;">
+                <a href="{{ url_for('mark_attendance', subject_id=subject.id) }}" class="btn-primary"
+                    style="width: 100%; text-align: center;">Mark Attendance</a>
+                <a href="{{ url_for('class_view_student_percentage', subject_id=subject.id) }}" class="btn-secondary"
+                    style="width: 100%; text-align: center;">View Student %</a>
+            </div>
+        </div>
+        {% else %}
+        <p>No subjects assigned to this class yet.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .subtitle {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        margin-top: 0.25rem;
+    }
+
+    .subject-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .subject-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--border-color);
+    }
+
+    .subject-card h4 {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .subject-card p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+</style>
+{% endblock %}

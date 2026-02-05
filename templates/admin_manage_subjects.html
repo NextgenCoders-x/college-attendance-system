@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h2>Manage Subjects</h2>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn-secondary">Back to Dashboard</a>
+</div>
+
+<div class="content-split">
+    <div class="form-card">
+        <h3>Add Subject</h3>
+        <form method="POST">
+            <div class="form-group">
+                <label>Subject Name</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>Subject Code</label>
+                <input type="text" name="code" required>
+            </div>
+            <div class="form-group">
+                <label>Department</label>
+                <select name="department" required>
+                    <option value="">Select Department</option>
+                    {% for dept in departments %}
+                    <option value="{{ dept.id }}">{{ dept.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>For Class (Year)</label>
+                <select name="year" required>
+                    <option value="1">1st Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3">3rd Year</option>
+                    <option value="4">4th Year</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Batch</label>
+                <select name="section" required>
+                    <option value="I Batch">I Batch</option>
+                    <option value="II Batch">II Batch</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Assigned Staff (Optional)</label>
+                <select name="staff_id">
+                    <option value="">Not Assigned</option>
+                    {% for staff in staff_list %}
+                    <option value="{{ staff.id }}">{{ staff.name }} ({{ staff.dept_name or 'No Dept' }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn-primary">Add Subject</button>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Batch</th>
+                    <th>Staff</th>
+                    <th style="width: 120px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in subjects %}
+                <tr>
+                    <td>{{ sub.code }}</td>
+                    <td>{{ sub.name }}</td>
+                    <td>{{ sub.dept_name }}</td>
+                    <td>{{ sub.year }} - {{ sub.section }}</td>
+                    <td>{{ sub.staff_name or 'Not Assigned' }}</td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem; justify-content: flex-start;">
+                            <a href="{{ url_for('edit_subject', sub_id=sub.id) }}" class="icon-btn edit-btn"
+                                title="Edit">
+                                ✏️
+                            </a>
+                            <form method="POST" action="{{ url_for('delete_subject', sub_id=sub.id) }}"
+                                onsubmit="return confirm('Are you sure?');" style="display:inline;">
+                                <button type="submit" class="icon-btn delete-btn" title="Delete">🗑️</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No subjects found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

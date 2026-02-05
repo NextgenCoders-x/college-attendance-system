@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h2>Mark Attendance</h2>
+    <a href="{{ url_for('staff_dashboard') }}" class="btn-secondary"
+        style="font-size: 0.85rem; padding: 0.4rem 0.8rem; border-color: var(--primary-color); color: var(--primary-color); font-weight: 600;">&larr;
+        Back</a>
+</div>
+
+<div class="card-section">
+    <div class="info-banner">
+        <p><strong>Subject:</strong> {{ subject.name }} ({{ subject.code }})</p>
+        <p><strong>Class:</strong> Year {{ subject.year }} - {{ subject.section }}</p>
+    </div>
+
+    <form method="POST" class="attendance-form">
+        <div class="form-group" style="max-width: 300px;">
+            <label for="date">Select Date</label>
+            <input type="date" name="date" required value="{{ date_today }}">
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Register No</th>
+                        <th style="text-align: center; width: 150px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.register_no }}</td>
+                        <td style="text-align: center;">
+                            <div class="radio-group">
+                                <label class="radio-label radio-present">
+                                    P <input type="radio" name="status_{{ student.id }}" value="Present" checked>
+                                </label>
+                                <label class="radio-label radio-absent">
+                                    A <input type="radio" name="status_{{ student.id }}" value="Absent">
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2">No students found in this class.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="actions mt-3">
+            <button type="submit" class="btn-primary" style="max-width: 200px;">Save Attendance</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Set today's date by default
+    document.querySelector('input[type="date"]').valueAsDate = new Date();
+</script>
+
+<style>
+    /* Existing styles base */
+    .info-banner {
+        background: #eef2ff;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .info-banner p {
+        margin-bottom: 0.25rem;
+    }
+
+    .radio-group {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .radio-label {
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .radio-present {
+        color: var(--success);
+    }
+
+    .radio-absent {
+        color: var(--danger);
+    }
+
+    .mt-3 {
+        margin-top: 1.5rem;
+    }
+
+    /* Table modifications for Desktop */
+    .table-container table {
+        table-layout: fixed;
+        /* Stable layout */
+    }
+
+    .table-container th,
+    .table-container td {
+        vertical-align: middle;
+    }
+
+    /* --- MOBILE OPTIMIZATION --- */
+    @media (max-width: 768px) {
+
+        /* Strict No Horizontal Scroll */
+        html,
+        body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+
+        /* Ensure Container allows full scroll - NO nested overflow */
+        .card-section {
+            padding: 0;
+            background: transparent;
+            box-shadow: none;
+            overflow: visible !important;
+            height: auto !important;
+            width: 100%;
+        }
+
+        .header-section {
+            margin-bottom: 0.5rem;
+            padding: 0 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-banner {
+            margin: 0 0.5rem 1rem 0.5rem;
+            padding: 0.75rem;
+            font-size: 0.85rem;
+            width: calc(100% - 1rem);
+            box-sizing: border-box;
+        }
+
+        /* Force form elements to fit */
+        .attendance-form .form-group {
+            width: calc(100% - 1rem) !important;
+            margin: 0 0.5rem 1rem 0.5rem;
+            box-sizing: border-box;
+        }
+
+        /* Show Headers */
+        .table-container {
+            overflow: visible !important;
+            width: 100%;
+        }
+
+        .table-container thead {
+            display: block;
+            width: 100%;
+        }
+
+        .table-container thead tr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: #f9fafb;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border-color);
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .table-container thead th {
+            border: none;
+            padding: 0;
+            background: transparent;
+        }
+
+        /* Register No Header */
+        .table-container thead th:nth-child(1) {
+            flex: 1;
+            text-align: left;
+        }
+
+        /* Status Header */
+        .table-container thead th:nth-child(2) {
+            flex: 0 0 auto;
+            width: 100px;
+            text-align: center;
+        }
+
+        /* Rows */
+        .table-container table,
+        .table-container tbody {
+            display: block;
+            width: 100%;
+        }
+
+        .table-container tr {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .table-container td {
+            padding: 0;
+            border: none;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Register No (Left Side) - Fixed Width Compact */
+        .table-container td:nth-child(1) {
+            flex: 0 0 130px;
+            /* Fixed width strictly for ID */
+            max-width: 130px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-color);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Radio Group (Right Side) - Takes remaining space, aligns left */
+        .table-container td:nth-child(2) {
+            flex: 1;
+            /* Take remaining space */
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+            width: auto;
+            justify-content: flex-start;
+            /* Keep close to Reg No */
+            padding-left: 0.5rem;
+            /* Small gap */
+        }
+
+        .radio-group {
+            gap: 1.25rem;
+            justify-content: flex-start;
+            /* Align left */
+            width: auto;
+        }
+
+        .radio-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 0.25rem;
+        }
+
+        input[type="radio"] {
+            transform: scale(1.3);
+        }
+
+        /* Actions: Natural Flow */
+        .actions {
+            position: static !important;
+            margin-top: 1.5rem !important;
+            padding: 0 0.5rem 2rem 0.5rem;
+            background: transparent;
+            border-top: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    }
+</style>
+{% endblock %}

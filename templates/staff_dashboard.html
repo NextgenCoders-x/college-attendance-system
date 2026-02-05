@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h2>Staff Dashboard</h2>
+</div>
+
+<div class="card-section">
+    <h3>Assigned Subjects</h3>
+    <div class="subject-grid">
+        {% for subject in subjects %}
+        <div class="subject-card">
+            <h4>{{ subject.name }} ({{ subject.code }})</h4>
+            <p><strong>Department:</strong> {{ subject.dept_name }}</p>
+            <p><strong>Class:</strong> Year {{ subject.year }} - {{ subject.section }}</p>
+            <div class="action-buttons"
+                style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem;">
+                <a href="{{ url_for('mark_attendance', subject_id=subject.id) }}" class="btn-primary"
+                    style="width: 100%; text-align: center;">Mark Attendance</a>
+                <a href="{{ url_for('staff_view_attendance_stats', subject_id=subject.id) }}" class="btn-secondary"
+                    style="width: 100%; text-align: center;">View Student %</a>
+            </div>
+        </div>
+        {% else %}
+        <p>No subjects assigned yet.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .subject-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .subject-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--border-color);
+    }
+
+    .subject-card h4 {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .subject-card p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .mt-2 {
+        margin-top: 1rem;
+        display: inline-block;
+        text-align: center;
+        text-decoration: none;
+    }
+</style>
+
+<div class="dev-team-box">
+    <h3>Developer Team</h3>
+    <div class="dev-info">
+        <p><span class="label">Backend & Database:</span> <span class="name">Mohanraj</span></p>
+        <p><span class="label">Frontend:</span> <span class="name">Jagan</span></p>
+        <p><span class="label">Support:</span> <span class="name">M.Sc IT Students (2025 – 2027 Batch)</span></p>
+    </div>
+</div>
+
+<style>
+    .dev-team-box {
+        margin-top: 40px;
+        padding: 20px;
+        background: #ffffff;
+        border: 1px solid #dbe7ff;
+        border-radius: 12px;
+        color: #1f2937;
+        text-align: center;
+        box-shadow: 0 0 16px rgba(79, 70, 229, 0.12);
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .dev-team-box h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+        color: #4f46e5;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .dev-team-box .dev-info p {
+        margin: 8px 0;
+        font-size: 0.95rem;
+        color: #4b5563;
+    }
+
+    .dev-team-box .label {
+        font-weight: 600;
+        color: #4f46e5;
+        margin-right: 5px;
+    }
+
+    .dev-team-box .name {
+        color: #111827;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}

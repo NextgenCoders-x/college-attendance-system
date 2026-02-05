@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="dev-info-container">
+    <div class="dev-card">
+        <div class="dev-header">
+            <h2>Developer Team</h2>
+            <p>Project Contributors</p>
+        </div>
+
+        <div class="dev-content">
+            <div class="dev-item">
+                <span class="role">Backend & Database</span>
+                <span class="name">Mohanraj G</span>
+            </div>
+            <div class="dev-item">
+                <span class="role">Frontend</span>
+                <span class="name">Jagan D</span>
+            </div>
+            <div class="dev-item">
+                <span class="role">Support</span>
+                <span class="name">M.Sc IT Students (2025 – 2027 Batch)</span>
+            </div>
+        </div>
+
+        <div class="dev-actions">
+            <!-- Back button uses history.back() for convenience, or we can use a specific route if known. 
+                 User request said "Add a Back button to go to previous page". JS is safest. -->
+            <button onclick="history.back()" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dev-info-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 1rem;
+    }
+
+    .dev-card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 450px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(109, 93, 246, 0.15);
+        /* Soft Violet Shadow */
+        overflow: hidden;
+        border: 1px solid #eef2ff;
+        text-align: center;
+    }
+
+    .dev-header {
+        background: linear-gradient(135deg, #6D5DF6 0%, #8B5CF6 100%);
+        color: white;
+        padding: 2rem 1.5rem;
+    }
+
+    .dev-header h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .dev-header p {
+        margin-top: 5px;
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+
+    .dev-content {
+        padding: 2rem;
+    }
+
+    .dev-item {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .dev-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .role {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #8B5CF6;
+        /* Violet */
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .name {
+        font-size: 1.1rem;
+        color: #1f2937;
+        font-weight: 500;
+    }
+
+    .dev-actions {
+        padding: 1.5rem;
+        background: #f9fafb;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .btn-back {
+        background: transparent;
+        border: 1px solid #d1d5db;
+        color: #6b7280;
+        padding: 0.6rem 1.5rem;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-back:hover {
+        background: #f3f4f6;
+        color: #374151;
+        border-color: #9ca3af;
+    }
+</style>
+{% endblock %}

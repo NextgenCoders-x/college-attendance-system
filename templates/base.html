@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AAA College Attendance System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    {% block navbar %}
+    <nav class="navbar">
+        <div class="nav-brand">AAA COLLEGE ATTENDANCE SYSTEM</div>
+        <div class="nav-links">
+            {% if session.get('user_id') %}
+            <span class="user-greeting">Hello, {{ session.get('username') }}</span>
+            <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+            {% endif %}
+        </div>
+    </nav>
+    {% endblock %}
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block footer %}
+    <footer class="footer">
+        <p>@ Developed by Mohanraj | v1.0</p>
+    </footer>
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,344 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Admin Data Management & Reset</h2>
+        <p class="text-danger">
+            <strong>Warning:</strong> These actions permanently delete data.
+            All actions shown here are destructive and cannot be undone.
+            Please proceed with extreme caution.
+        </p>
+        <hr>
+    </div>
+</div>
+
+<!-- SECTION GROUP 1: ATTENDANCE ONLY DELETION -->
+<h4 class="mb-3 text-secondary border-bottom pb-2">Attendance Only Deletion</h4>
+<div class="row mb-4">
+
+    <!-- 1. Clear ALL Attendance (Global) -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100 border-0 rounded-lg"
+            style="background-color: #f0fbfd; border-left: 5px solid #17a2b8 !important;">
+            <div class="card-body">
+                <h5 class="card-title text-info font-weight-bold"><i class="fas fa-exclamation-triangle"></i> Clear ALL
+                    Attendance (Global)</h5>
+                <p class="card-text small text-muted">Delete EVERY attendance record in the database for all students.
+                </p>
+                <form action="{{ url_for('admin_reset_attendance_action') }}" method="POST"
+                    onsubmit="return confirm('EXTREME DANGER: This will wipe ALL attendance data from the system. Are you absolutely sure?');">
+                    <input type="hidden" name="action" value="clear_all">
+                    <div class="form-group">
+                        <input type="text" class="form-control" disabled value="All Records (Global)"
+                            style="opacity: 0.6; cursor: not-allowed; border: 1px solid #17a2b8;">
+                    </div>
+                    <button type="submit" class="btn btn-info btn-block font-weight-bold"
+                        style="background-color: #17a2b8; border-color: #17a2b8;">
+                        Clear ALL Attendance
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Clear Student Attendance -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100 border-0 rounded-lg"
+            style="background-color: #f0fbfd; border-left: 5px solid #17a2b8 !important;">
+            <div class="card-body">
+                <h5 class="card-title text-info font-weight-bold"><i class="fas fa-user-clock"></i> Clear Student
+                    Attendance</h5>
+                <p class="card-text small text-muted">Delete attendance records for a single student.</p>
+                <form action="{{ url_for('admin_reset_attendance_action') }}" method="POST"
+                    onsubmit="return confirm('This action is permanent and cannot be undone. Clear attendance for this student?');">
+                    <input type="hidden" name="action" value="clear_student">
+                    <div class="form-group">
+                        <select class="form-control select2" name="student_id" required
+                            style="border: 1px solid #17a2b8;">
+                            <option value="">-- Select Student --</option>
+                            {% for s in students %}
+                            <option value="{{ s.id }}">{{ s.register_no }} - {{ s.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-info btn-block font-weight-bold"
+                        style="background-color: #17a2b8; border-color: #17a2b8;">Clear Student Attendance</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Clear Department Attendance -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100 border-0 rounded-lg"
+            style="background-color: #f0fbfd; border-left: 5px solid #17a2b8 !important;">
+            <div class="card-body">
+                <h5 class="card-title text-info font-weight-bold">Clear Department Attendance</h5>
+                <p class="card-text small text-muted">Clear attendance for all students in a department.</p>
+                <form action="{{ url_for('admin_reset_attendance_action') }}" method="POST"
+                    onsubmit="return confirm('This will delete all attendance records for students in this department. Are you sure?');">
+                    <input type="hidden" name="action" value="delete_department_attendance">
+                    <div class="form-group">
+                        <select class="form-control" name="department_id" required style="border: 1px solid #17a2b8;">
+                            <option value="">-- Select Dept --</option>
+                            {% for d in departments %}
+                            <option value="{{ d.id }}">{{ d.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" name="delete_department_attendance"
+                        class="btn btn-info btn-block font-weight-bold"
+                        style="background-color: #17a2b8; border-color: #17a2b8;">Clear Dept Attendance</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Clear Subject Attendance -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100 border-0 rounded-lg"
+            style="background-color: #f0fbfd; border-left: 5px solid #17a2b8 !important;">
+            <div class="card-body">
+                <h5 class="card-title text-info font-weight-bold">Clear Subject Attendance</h5>
+                <p class="card-text small text-muted">Clear attendance records for a specific subject.</p>
+                <form action="{{ url_for('admin_reset_attendance_action') }}" method="POST"
+                    onsubmit="return confirm('This will delete attendance records for this subject. Are you sure?');">
+                    <input type="hidden" name="action" value="delete_subject_attendance">
+                    <div class="form-group">
+                        <select class="form-control select2" name="subject_id" required
+                            style="border: 1px solid #17a2b8;">
+                            <option value="">-- Select Subject --</option>
+                            {% for sub in subjects %}
+                            <option value="{{ sub.id }}">{{ sub.code }} - {{ sub.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" name="delete_subject_attendance"
+                        class="btn btn-info btn-block font-weight-bold"
+                        style="background-color: #17a2b8; border-color: #17a2b8;">Clear Subject Attendance</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Clear Staff Attendance -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100 border-0 rounded-lg"
+            style="background-color: #f0fbfd; border-left: 5px solid #17a2b8 !important;">
+            <div class="card-body">
+                <h5 class="card-title text-info font-weight-bold">Clear Staff Attendance</h5>
+                <p class="card-text small text-muted">Clear attendance for subjects assigned to a staff.</p>
+                <form action="{{ url_for('admin_reset_attendance_action') }}" method="POST"
+                    onsubmit="return confirm('This will delete attendance records for all subjects assigned to this staff member. Are you sure?');">
+                    <input type="hidden" name="action" value="delete_staff_attendance">
+                    <div class="form-group">
+                        <select class="form-control select2" name="staff_id" required
+                            style="border: 1px solid #17a2b8;">
+                            <option value="">-- Select Staff --</option>
+                            {% for st in staff_list %}
+                            <option value="{{ st.id }}">{{ st.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" name="delete_staff_attendance" class="btn btn-info btn-block font-weight-bold"
+                        style="background-color: #17a2b8; border-color: #17a2b8;">Clear Staff Attendance</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SECTION GROUP 2: DESTRUCTIVE DATA DELETION (ENTITIES) -->
+<h4 class="mb-3 text-danger border-bottom border-danger pb-2">Destructive Data Deletion (Entities)</h4>
+<div class="row">
+
+    <!-- 6. Delete Student (Full Record) -->
+    <div class="col-md-6 mb-4">
+        <!-- Entity Style: Warning/Orange -->
+        <div class="card shadow-sm h-100 border-0 rounded-lg"
+            style="background-color: #fff3cd; border-left: 5px solid #fd7e14 !important;">
+            <div class="card-body">
+                <h5 class="card-title text-dark font-weight-bold" style="color: #fd7e14 !important;"><i
+                        class="fas fa-user-times"></i> Delete Student (Full Record)</h5>
+                <p class="card-text small text-muted">Permanently deletes student profile and their attendance.</p>
+                <form action="{{ url_for('admin_reset_attendance_action') }}" method="POST"
+                    onsubmit="return confirm('This action is permanent and cannot be undone. Are you sure you want to completely delete this student?');">
+                    <input type="hidden" name="action" value="delete_student_full">
+                    <div class="form-group">
+                        <select class="form-control select2" name="student_id" required
+                            style="border: 1px solid #fd7e14;">
+                            <option value="">-- Select Student --</option>
+                            {% for s in students %}
+                            <option value="{{ s.id }}">{{ s.register_no }} - {{ s.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" name="delete_student_full" class="btn btn-warning btn-block font-weight-bold"
+                        style="background-color: #fd7e14; border-color: #fd7e14; color: white;">Delete Student</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Delete Staff (Record) -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100 border-0 rounded-lg"
+            style="background-color: #fff3cd; border-left: 5px solid #fd7e14 !important;">
+            <div class="card-body">
+                <h5 class="card-title text-dark font-weight-bold" style="color: #fd7e14 !important;"><i
+                        class="fas fa-chalkboard-teacher"></i> Delete Staff (Record)</h5>
+                <p class="card-text small text-muted">Deletes staff profile. Unassigns their subjects.</p>
+                <form action="{{ url_for('admin_reset_attendance_action') }}" method="POST"
+                    onsubmit="return confirm('This action is permanent. Are you sure you want to delete this staff profile?');">
+                    <input type="hidden" name="action" value="delete_staff">
+                    <div class="form-group">
+                        <select class="form-control select2" name="staff_id" required
+                            style="border: 1px solid #fd7e14;">
+                            <option value="">-- Select Staff --</option>
+                            {% for st in staff_list %}
+                            <option value="{{ st.id }}">{{ st.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" name="delete_staff" class="btn btn-warning btn-block font-weight-bold"
+                        style="background-color: #fd7e14; border-color: #fd7e14; color: white;">Delete Staff</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Delete Subject (Full Record) -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100 border-0 rounded-lg"
+            style="background-color: #fff3cd; border-left: 5px solid #fd7e14 !important;">
+            <div class="card-body">
+                <h5 class="card-title text-dark font-weight-bold" style="color: #fd7e14 !important;"><i
+                        class="fas fa-book"></i> Delete Subject (Full Record)</h5>
+                <p class="card-text small text-muted">Permanently deletes subject and its attendance records.</p>
+                <form action="{{ url_for('admin_reset_attendance_action') }}" method="POST"
+                    onsubmit="return confirm('This action is permanent. Are you sure you want to delete this subject?');">
+                    <input type="hidden" name="action" value="delete_subject">
+                    <div class="form-group">
+                        <select class="form-control select2" name="subject_id" required
+                            style="border: 1px solid #fd7e14;">
+                            <option value="">-- Select Subject --</option>
+                            {% for sub in subjects %}
+                            <option value="{{ sub.id }}">{{ sub.code }} - {{ sub.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" name="delete_subject" class="btn btn-warning btn-block font-weight-bold"
+                        style="background-color: #fd7e14; border-color: #fd7e14; color: white;">Delete Subject</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Delete Department – FULL DATA WIPE -->
+    <div class="col-md-6 mb-4">
+        <!-- Enhanced Danger Style Container -->
+        <div class="card shadow-sm h-100 border-0 rounded-lg"
+            style="background-color: #fff5f5; border-left: 5px solid #dc3545 !important;">
+            <div class="card-body">
+                <!-- Bigger Bold Title -->
+                <h5 class="card-title text-danger font-weight-bold" style="font-size: 1.3rem;">
+                    <i class="fas fa-radiation-alt"></i> Delete Department – FULL DATA WIPE
+                </h5>
+
+                <!-- Readable Warning Text -->
+                <div class="alert alert-danger p-2 small border-0"
+                    style="background-color: rgba(220, 53, 69, 0.1); color: #dc3545;">
+                    <i class="fas fa-exclamation-circle"></i> <strong>CRITICAL WARNING:</strong>
+                    This action will permanently delete:
+                    <ul class="mb-0 pl-3">
+                        <li>The Department itself</li>
+                        <li>All Students in this department</li>
+                        <li>All Subjects in this department</li>
+                        <li>All Attendance records (Cascading)</li>
+                    </ul>
+                </div>
+
+                <form action="{{ url_for('admin_reset_attendance_action') }}" method="POST"
+                    onsubmit="return confirm('CRITICAL: You are about to wipe an entire department. This cannot be undone. Are you absolutely sure?');">
+                    <input type="hidden" name="action" value="delete_department_full">
+
+                    <div class="form-group">
+                        <select class="form-control mb-3" name="department_id" required
+                            style="border: 2px solid #dc3545;">
+                            <option value="">-- Select Dept to Wipe --</option>
+                            {% for d in departments %}
+                            <option value="{{ d.id }}">{{ d.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Safety Checkbox -->
+                    <div class="custom-control custom-checkbox mb-3">
+                        <input type="checkbox" class="custom-control-input" id="confirmDeleteDept"
+                            onchange="toggleDeptDeleteButton(this)">
+                        <label class="custom-control-label text-danger font-weight-bold small" for="confirmDeleteDept">
+                            I understand this will permanently delete all data in this department
+                        </label>
+                    </div>
+
+                    <!-- Disabled Delete Button -->
+                    <button type="submit" name="delete_department_full" id="btnDeleteDept"
+                        class="btn btn-danger btn-block font-weight-bold p-3" disabled
+                        style="opacity: 0.6; cursor: not-allowed; transition: all 0.3s;">
+                        <i class="fas fa-trash-alt"></i> DELETE DEPARTMENT (FULL)
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function toggleDeptDeleteButton(checkbox) {
+        const btn = document.getElementById('btnDeleteDept');
+        if (checkbox.checked) {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+        } else {
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
+        }
+    }
+</script>
+
+<div class="mb-5">
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to
+        Dashboard</a>
+</div>
+
+<!-- Initialize Select2 -->
+<script>
+    $(document).ready(function () {
+        if ($('.select2').length > 0) {
+            $('.select2').select2({
+                theme: 'bootstrap4',
+                width: '100%'
+            });
+        }
+    });
+</script>
+
+<style>
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .form-group label {
+        font-weight: 500;
+    }
+
+    .rounded-lg {
+        border-radius: 0.5rem !important;
+    }
+</style>
+{% endblock %}

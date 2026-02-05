@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section compact-header">
+    <h2>Attendance Statistics</h2>
+    <div style="display: flex; gap: 0.5rem;">
+        <a href="{{ url_for('staff_export_attendance_stats', subject_id=subject.id) }}" class="btn-primary"
+            style="font-size: 0.85rem; padding: 0.4rem 0.8rem; text-decoration: none;">Export to Excel</a>
+        <a href="{{ url_for('staff_dashboard') }}" class="btn-secondary back-btn">&larr; Back</a>
+    </div>
+</div>
+
+<div class="content-wrapper">
+    <div class="info-banner">
+        <p><strong>Subject:</strong> {{ subject.name }} ({{ subject.code }})</p>
+        <p><strong>Class:</strong> Year {{ subject.year }} - {{ subject.section }}</p>
+    </div>
+
+    <div class="table-container compact-table-container">
+        <table class="stats-table-compact">
+            <thead>
+                <tr>
+                    <th>REGISTER NO</th>
+                    <th>PERCENTAGE</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stat in stats %}
+                <tr>
+                    <td>{{ stat.register_no }}</td>
+                    <td>
+                        <span class="badge {% if stat.percentage < 75 %}badge-danger{% else %}badge-success{% endif %}">
+                            {{ stat.percentage }}%
+                        </span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="2" style="text-align: center;">No attendance records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

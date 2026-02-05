@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dash-container">
+    <!-- Header -->
+    <div class="dash-header">
+        <h2>My Attendance</h2>
+        <p class="student-info">Student: {{ student.name }} ({{ student.register_no }})</p>
+    </div>
+
+    <!-- Attendance Summary Box (Compact) -->
+    <div class="summary-section">
+        <div class="attendance-box {% if overall_percentage >= 75 %}good{% else %}low{% endif %}">
+            <div class="box-label">Overall Attendance</div>
+            <div class="percentage-value">{{ overall_percentage }}%</div>
+            <div class="status-msg">
+                {% if overall_percentage >= 75 %}
+                Good Standing
+                {% else %}
+                Needs Improvement
+                {% endif %}
+            </div>
+            <div class="box-footer">
+                Based on daily calculation
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Button -->
+    <div class="actions">
+        <a href="{{ url_for('student_attendance_history') }}" class="btn-primary btn-block">View Attendance History</a>
+        <a href="{{ url_for('developer_info') }}" class="btn-primary btn-block btn-small-dev">Developer Info</a>
+    </div>
+
+</div>
+
+<style>
+    /* --- Base Layout --- */
+    .dash-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 0.5rem;
+    }
+
+    .dash-header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .student-info {
+        color: var(--text-muted);
+        font-size: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    /* --- Attendance Box --- */
+    .summary-section {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+
+    .attendance-box {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        width: 100%;
+        max-width: 300px;
+        /* Reduced Width */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        border-top-width: 4px;
+        /* Color strip on top */
+    }
+
+    .attendance-box.good {
+        border-top-color: var(--success);
+    }
+
+    .attendance-box.low {
+        border-top-color: var(--danger);
+    }
+
+    .box-label {
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .percentage-value {
+        font-size: 3rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+
+    .attendance-box.good .percentage-value {
+        color: var(--success);
+    }
+
+    .attendance-box.low .percentage-value {
+        color: var(--danger);
+    }
+
+    .status-msg {
+        font-weight: 500;
+        font-size: 1rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+    .box-footer {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border-color);
+        padding-top: 0.75rem;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 3rem;
+    }
+
+    .btn-block {
+        width: 100%;
+        max-width: 300px;
+        padding: 1rem;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .attendance-box {
+            padding: 1.25rem;
+            box-shadow: none;
+        }
+
+        .percentage-value {
+            font-size: 2.5rem;
+        }
+    }
+
+    .btn-small-dev {
+        margin-top: 1rem;
+        padding: 0.6rem 1.5rem;
+        /* Smaller padding */
+        font-size: 0.9rem;
+        max-width: 200px;
+        /* Smaller width */
+        border-radius: 50px;
+        /* Rounded corners */
+        background: #8B5CF6;
+        /* Violet */
+        box-shadow: 0 4px 10px rgba(139, 92, 246, 0.2);
+    }
+
+    .btn-small-dev:hover {
+        background: #7c3aed;
+        transform: translateY(-1px);
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+</style>
+{% endblock %}

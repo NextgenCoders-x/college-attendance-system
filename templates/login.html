@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<!-- FontAwesome for Icons (Ensuring compatibility) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<div class="mobile-login-wrapper">
+    <!-- Top Gradient Header -->
+    <div class="login-header">
+        <div class="header-content">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="app-logo">
+            <h2>Welcome Back</h2>
+            <p>Sign in to your account</p>
+        </div>
+    </div>
+
+    <!-- Bottom White Content -->
+    <div class="login-content">
+        <form method="POST" class="login-form">
+
+            <div class="input-group">
+                <input type="text" id="username" name="username" required placeholder="Username / Register No"
+                    class="pill-input">
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" name="password" required placeholder="Password" class="pill-input">
+            </div>
+
+            <button type="submit" class="btn-login-pill">LOGIN</button>
+        </form>
+
+        <div class="login-footer">
+            <p class="brand-text">AAA College Attendance System</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Reset & Layout */
+    body,
+    html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: #ffffff;
+        overflow-x: hidden;
+    }
+
+    /* Remove base container padding for login page if it exists */
+    .container {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    .mobile-login-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100%;
+        background: #ffffff;
+    }
+
+    /* Top Section: Gradient (Violet Theme) */
+    .login-header {
+        flex: 0.45;
+        background: linear-gradient(135deg, #6D5DF6 0%, #8B5CF6 50%, #A78BFA 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        position: relative;
+        padding-bottom: 2rem;
+    }
+
+    .header-content {
+        margin-top: -2rem;
+    }
+
+    .app-logo {
+        width: 80px;
+        height: auto;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 10px;
+        border-radius: 50%;
+        margin-bottom: 1rem;
+        backdrop-filter: blur(5px);
+    }
+
+    .login-header h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+
+    .login-header p {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+    }
+
+    /* Bottom Section: White Content */
+    .login-content {
+        flex: 0.55;
+        background: #ffffff;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        margin-top: -30px;
+        padding: 3rem 2rem;
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: none;
+        /* Removed shadow for seamless look if desired, or keep soft one? User said "merged". Let's keep a VERY subtle one just for layer distinction, or remove completely to feel like page body. Let's keep it subtle to separate from header, but remove internal shadows.*/
+    }
+
+    /* Form Styles: Clean Single Layer Inputs */
+    .login-form {
+        width: 100%;
+        max-width: 350px;
+        margin-top: 1rem;
+    }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+        /* Wrapper transparent - fix double shape */
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        border-radius: 999px;
+    }
+
+    .input-group:focus-within {
+        transform: none;
+        /* No wrapper lift */
+    }
+
+    .pill-input {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        /* Single Pill Shape */
+        border-radius: 999px;
+        background: #ffffff;
+        border: 1px solid #e6e6f0;
+        box-shadow: 0 6px 18px rgba(99, 102, 241, 0.08);
+        /* Soft shadow */
+        font-size: 1rem;
+        color: #374151;
+        outline: none;
+        box-sizing: border-box;
+        transition: all 0.2s ease;
+    }
+
+    .pill-input:focus {
+        border-color: #8B5CF6;
+        /* Violet Border */
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.15);
+        /* Slightly stronger shadow */
+    }
+
+    /* Button (Violet Theme) */
+    .btn-login-pill {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 50px;
+        background: #6D5DF6;
+        /* Main Violet */
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        margin-top: 1rem;
+        box-shadow: 0 4px 10px rgba(109, 93, 246, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn-login-pill:hover {
+        background: #5b4ddb;
+        box-shadow: 0 6px 15px rgba(109, 93, 246, 0.4);
+        transform: translateY(-1px);
+    }
+
+    /* Footer */
+    .login-footer {
+        margin-top: auto;
+        text-align: center;
+        color: #9ca3af;
+        padding-top: 2rem;
+    }
+
+    .brand-text {
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+    /* Desktop Layout Fixes */
+    @media (min-width: 768px) {
+        .mobile-login-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            /* Proper desktop background */
+        }
+
+        .login-header {
+            width: 100%;
+            max-width: 420px;
+            flex: initial;
+            height: auto;
+            min-height: 220px;
+            border-radius: 24px 24px 0 0;
+            /* Rounded top only */
+            margin-bottom: 0;
+            padding-bottom: 0;
+            padding-top: 2rem;
+        }
+
+        .header-content {
+            margin-top: 0;
+            padding-bottom: 2rem;
+        }
+
+        .login-content {
+            width: 100%;
+            max-width: 420px;
+            border-radius: 0 0 24px 24px;
+            /* Rounded bottom only */
+            margin-top: 0;
+            /* No overlap on desktop card mode */
+            flex: initial;
+            height: auto;
+            border: 1px solid #eef2ff;
+            border-top: none;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            /* Card shadow for desktop */
+        }
+
+        .login-form {
+            max-width: 100%;
+        }
+    }
+</style>
+{% endblock %}
