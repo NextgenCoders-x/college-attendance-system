@@ -15,6 +15,7 @@ def get_db():
             user=app.config['DB_USER'],
             password=app.config['DB_PASSWORD'],
             database=app.config['DB_NAME'],
+            port=app.config['DB_PORT'],
             autocommit=True
         )
         g.cursor = g.db.cursor(dictionary=True) # Return rows as dictionaries

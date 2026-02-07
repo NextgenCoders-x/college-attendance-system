@@ -1,8 +1,8 @@
 import os
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev_key_very_secret_123'
-    DB_HOST = 'localhost'
-    DB_USER = 'root'
-    DB_PASSWORD = 'mohan'
-    DB_NAME = 'attendance_db'
+    DB_HOST = os.getenv("MYSQLHOST", "localhost")
+    DB_USER = os.getenv("MYSQLUSER", "root")
+    DB_PASSWORD = os.getenv("MYSQLPASSWORD", "")
+    DB_NAME = os.getenv("MYSQLDATABASE", "")
+    DB_PORT = int(os.getenv("MYSQLPORT", 3306))
