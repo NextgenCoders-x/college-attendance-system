@@ -7,6 +7,8 @@ from config import Config
 app = Flask(__name__)
 app.config.from_object(Config)
 
+app.secret_key = "mohanraj$attendance@system#2026!secure"
+
 # Database Helper Functions
 def get_db():
     if 'db' not in g:
