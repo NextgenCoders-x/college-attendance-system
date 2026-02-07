@@ -3,11 +3,14 @@ import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 import functools
 from config import Config
+import os
 
 app = Flask(__name__)
 app.config.from_object(Config)
-
-app.secret_key = "mohanraj$attendance@system#2026!secure"
+app.config["SECRET_KEY"] = os.getenv(
+    "SECRET_KEY",
+    "mohanraj$attendance@system#2026!secure"
+)
 
 # Database Helper Functions
 def get_db():
