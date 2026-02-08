@@ -38,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label>Batch</label>
-                <select name="section" required>
+                <select name="batch" required>
                     <option value="I Batch">I Batch</option>
                     <option value="II Batch">II Batch</option>
                 </select>
@@ -74,7 +74,7 @@
                     <td>{{ sub.code }}</td>
                     <td>{{ sub.name }}</td>
                     <td>{{ sub.dept_name }}</td>
-                    <td>{{ sub.year }} - {{ sub.section }}</td>
+                    <td>{{ sub.year }} - {{ sub.batch }}</td>
                     <td>{{ sub.staff_name or 'Not Assigned' }}</td>
                     <td>
                         <div style="display: flex; gap: 0.5rem; justify-content: flex-start;">

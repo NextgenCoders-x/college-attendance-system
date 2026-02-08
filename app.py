@@ -343,7 +343,7 @@ def manage_students():
         password = request.form['password'] # Or default to reg_no
         dept_id = request.form['department']
         year = request.form['year']
-        section = request.form['section']
+        batch = request.form['batch']
         
         # Username for student is register_no
         hashed = generate_password_hash(password)
@@ -355,9 +355,9 @@ def manage_students():
             
             # Create Student Profile
             cursor.execute("""
-                INSERT INTO students (user_id, register_no, name, department_id, current_year, section) 
+                INSERT INTO students (user_id, register_no, name, department_id, current_year, batch) 
                 VALUES (%s, %s, %s, %s, %s, %s)
-            """, (user_id, register_no, name, dept_id, year, section))
+            """, (user_id, register_no, name, dept_id, year, batch))
             
             flash('Student added successfully.', 'success')
             return redirect(url_for('manage_students'))
@@ -383,16 +383,16 @@ def edit_student(student_id):
         register_no = request.form['register_no']
         dept_id = request.form['department']
         year = request.form['year']
-        section = request.form['section']
+        batch = request.form['batch']
         password = request.form.get('password')
         
         try:
             # Update Profile
             cursor.execute("""
                 UPDATE students 
-                SET name=%s, register_no=%s, department_id=%s, current_year=%s, section=%s 
+                SET name=%s, register_no=%s, department_id=%s, current_year=%s, batch=%s 
                 WHERE id=%s
-            """, (name, register_no, dept_id, year, section, student_id))
+            """, (name, register_no, dept_id, year, batch, student_id))
             
             # Update User/Password if needed (and username if reg_no changed)
             cursor.execute("SELECT user_id FROM students WHERE id = %s", (student_id,))
@@ -469,7 +469,7 @@ def manage_subjects():
         code = request.form['code']
         dept_id = request.form['department']
         year = request.form['year']
-        section = request.form['section']
+        batch = request.form['batch']
         staff_id = request.form.get('staff_id') # Can be None/Empty
         
         if not staff_id or staff_id == "":
@@ -477,9 +477,9 @@ def manage_subjects():
         
         try:
             cursor.execute("""
-                INSERT INTO subjects (name, code, department_id, year, section, staff_id)
+                INSERT INTO subjects (name, code, department_id, year, batch, staff_id)
                 VALUES (%s, %s, %s, %s, %s, %s)
-            """, (name, code, dept_id, year, section, staff_id))
+            """, (name, code, dept_id, year, batch, staff_id))
             flash('Subject added successfully.', 'success')
             return redirect(url_for('manage_subjects'))
         except mysql.connector.Error as err:
@@ -505,7 +505,7 @@ def edit_subject(sub_id):
         code = request.form['code']
         dept_id = request.form['department']
         year = request.form['year']
-        section = request.form['section']
+        batch = request.form['batch']
         staff_id = request.form.get('staff_id')
         
         if not staff_id or staff_id == "":
@@ -513,9 +513,9 @@ def edit_subject(sub_id):
         
         try:
             cursor.execute("""
-                UPDATE subjects SET name=%s, code=%s, department_id=%s, year=%s, section=%s, staff_id=%s
+                UPDATE subjects SET name=%s, code=%s, department_id=%s, year=%s, batch=%s, staff_id=%s
                 WHERE id=%s
-            """, (name, code, dept_id, year, section, staff_id, sub_id))
+            """, (name, code, dept_id, year, batch, staff_id, sub_id))
             flash('Subject updated successfully.', 'success')
             return redirect(url_for('manage_subjects'))
         except mysql.connector.Error as err:
@@ -574,13 +574,13 @@ def class_dashboard():
     dept_name = cursor.fetchone()['name']
     
     # Get All Subjects for this Class (Dept + Year + Batch)
-    # Note: subjects table uses 'section' column to store batch info (I Batch, II Batch)
+    # Note: subjects table uses 'batch' column
     cursor.execute("""
         SELECT s.*, d.name as dept_name, st.name as staff_name
         FROM subjects s 
         LEFT JOIN departments d ON s.department_id = d.id
         LEFT JOIN staff st ON s.staff_id = st.id
-        WHERE s.department_id = %s AND s.year = %s AND s.section = %s
+        WHERE s.department_id = %s AND s.year = %s AND s.batch = %s
     """, (dept_id, year, batch))
     subjects = cursor.fetchall()
     
@@ -635,10 +635,10 @@ def mark_attendance(subject_id):
              return redirect(url_for('class_dashboard'))
 
         # Verify Subject Matches Class Login Credentials
-        # Subject 'section' col stores Batch (I Batch, II Batch)
+        # Subject 'batch' col stores Batch (I Batch, II Batch)
         if (subject['department_id'] != session['dept_id'] or 
             subject['year'] != session['year'] or 
-            subject['section'] != session['batch']):
+            subject['batch'] != session['batch']):
             flash("Access denied. This subject does not belong to your class login.", "danger")
             return redirect(url_for('class_dashboard'))
             
@@ -674,8 +674,8 @@ def mark_attendance(subject_id):
         # Get list of students for this subject's class again to be safe
         cursor.execute("""
             SELECT id FROM students 
-            WHERE department_id = %s AND current_year = %s AND section = %s
-        """, (subject['department_id'], subject['year'], subject['section']))
+            WHERE department_id = %s AND current_year = %s AND batch = %s
+        """, (subject['department_id'], subject['year'], subject['batch']))
         students = cursor.fetchall()
         
         try:
@@ -698,9 +698,9 @@ def mark_attendance(subject_id):
     # Get Students for this Subject (Dept, Year, Section)
     cursor.execute("""
         SELECT * FROM students 
-        WHERE department_id = %s AND current_year = %s AND section = %s
+        WHERE department_id = %s AND current_year = %s AND batch = %s
         ORDER BY register_no
-    """, (subject['department_id'], subject['year'], subject['section']))
+    """, (subject['department_id'], subject['year'], subject['batch']))
     students = cursor.fetchall()
     
     return render_template('staff_mark_attendance.html', subject=subject, students=students)
@@ -732,16 +732,16 @@ def class_view_student_percentage(subject_id):
     # Check if subject belongs to this class login (Dept + Year + Batch)
     if (subject['department_id'] != session['dept_id'] or 
         subject['year'] != session['year'] or 
-        subject['section'] != session['batch']):
+        subject['batch'] != session['batch']):
         flash("Access denied. Subject mismatch.", "danger")
         return redirect(url_for('class_dashboard'))
         
     # Get all students for this class
     cursor.execute("""
         SELECT * FROM students 
-        WHERE department_id = %s AND current_year = %s AND section = %s
+        WHERE department_id = %s AND current_year = %s AND batch = %s
         ORDER BY register_no
-    """, (subject['department_id'], subject['year'], subject['section']))
+    """, (subject['department_id'], subject['year'], subject['batch']))
     students = cursor.fetchall()
     
     student_stats = []
@@ -831,9 +831,9 @@ def staff_view_attendance_stats(subject_id):
     # Get all students for this class
     cursor.execute("""
         SELECT * FROM students 
-        WHERE department_id = %s AND current_year = %s AND section = %s
+        WHERE department_id = %s AND current_year = %s AND batch = %s
         ORDER BY register_no
-    """, (subject['department_id'], subject['year'], subject['section']))
+    """, (subject['department_id'], subject['year'], subject['batch']))
     students = cursor.fetchall()
     
     # Calculate Stats for each student using GLOBAL logic
@@ -879,9 +879,9 @@ def staff_export_attendance_stats(subject_id):
     # Get all students for this class
     cursor.execute("""
         SELECT * FROM students 
-        WHERE department_id = %s AND current_year = %s AND section = %s
+        WHERE department_id = %s AND current_year = %s AND batch = %s
         ORDER BY register_no
-    """, (subject['department_id'], subject['year'], subject['section']))
+    """, (subject['department_id'], subject['year'], subject['batch']))
     students = cursor.fetchall()
     
     # Create Excel
@@ -903,7 +903,7 @@ def staff_export_attendance_stats(subject_id):
     wb.save(buffer)
     buffer.seek(0)
     
-    filename = f"Attendance_{subject['code']}_{subject['year']}{subject['section']}.xlsx"
+    filename = f"Attendance_{subject['code']}_{subject['year']}{subject['batch']}.xlsx"
     return send_file(buffer, as_attachment=True, download_name=filename, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
 
@@ -955,9 +955,9 @@ def admin_attendance_correction():
                        a.id as attendance_id, a.status
                 FROM students st
                 LEFT JOIN attendance a ON st.id = a.student_id AND a.subject_id = %s AND a.date = %s
-                WHERE st.department_id = %s AND st.current_year = %s AND st.section = %s
+                WHERE st.department_id = %s AND st.current_year = %s AND st.batch = %s
                 ORDER BY st.register_no
-            """, (subject_id, date, selected_subject['department_id'], selected_subject['year'], selected_subject['section']))
+            """, (subject_id, date, selected_subject['department_id'], selected_subject['year'], selected_subject['batch']))
             
             attendance_records = cursor.fetchall()
 
